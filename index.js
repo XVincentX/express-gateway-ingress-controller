@@ -2,7 +2,7 @@ const { config, Client } = require('kubernetes-client')
 const JSONStream = require('JSONStream')
 const debug = require('debug')('eg-ingress-controller')
 
-const client = new Client({ config: config.fromKubeconfig() })
+const client = new Client({ config: config.getInCluster() })
 
 client.loadSpec().then((kubeApi) => {
   debug('Kubernetes API Specs loaded')
