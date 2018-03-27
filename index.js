@@ -10,13 +10,20 @@ client.loadSpec().then((kubeApi) => {
 
   ingresses.on('data', (ingressWatchEvent) => {
     debug('Ingress change detected')
+
+    const { spec } = ingressWatchEvent.object
+    const { uid } = ingressWatchEvent.object.metadata
+
     debug(ingressWatchEvent.type)
     switch (ingressWatchEvent.type) {
       case 'ADDED':
+        addIngressRule(uid, spec);
         break;
       case 'MODIFIED':
+        modifyIngressRule(uid, spec);
         break;
       case 'DELETED':
+        deleteIngressRule(uid);
     }
   })
 
