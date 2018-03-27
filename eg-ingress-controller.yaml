@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eg-ingress-controller
+spec:
+  containers:
+    - name: eg-ingress-controller
+      image: IMAGE_NAME
+      imagePullPolicy: Never
+      env:
+        - name: DEBUG
+          value: '*'
+    - name: express-gateway
+      image: expressgateway/express-gateway

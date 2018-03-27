@@ -1,0 +1,14 @@
+apiVersion: skaffold/v1alpha1
+kind: Config
+build:
+  artifacts:
+  - imageName: eg-ingress-controller
+    workspace: .
+  local: {}
+deploy:
+  kubectl:
+    manifests:
+    - paths:
+      - eg-*
+      parameters:
+        IMAGE_NAME: eg-ingress-controller
