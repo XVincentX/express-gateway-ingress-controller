@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+spec:
+  backend:
+    serviceName: customers
+    servicePort: 3000
+  rules:
+  - host: customers.apitest.lan
+    http:
+      paths:
+      - backend:
+          serviceName: customers
+          servicePort: 3000
+  - host: invoices.apitest.lan
+    http:
+      paths:
+      - backend:
+          serviceName: invoices
+          servicePort: 3000
