@@ -19,6 +19,12 @@ spec:
               value: 'eg-ingress-controller'
         - name: express-gateway
           image: expressgateway/express-gateway
+          livenessProbe:
+              httpGet:
+                path: /users
+                port: 9876
+              initialDelaySeconds: 3
+              periodSeconds: 3
           env:
-            - name: LOG_LELVE
+            - name: LOG_LEVEL
               value: 'DEBUG'
