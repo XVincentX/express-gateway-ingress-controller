@@ -3,26 +3,25 @@ const JSONStream = require('JSONStream')
 const axios = require('axios').default.create({ baseURL: 'http://localhost:9876' })
 const debug = require('debug')('eg-ingress-controller')
 
+const { createServiceEndpoint, createApiEndpoint, createPipelineWithProxyPolicy } = require('./egClient')
+
 const client = new Client({ config: config.getInCluster() })
 
-const addIngressRule = (uid, spec) => {
-  const createServiceEndpoint = (name, { serviceName, servicePort }) => {
-    return axios.put(`/service-endpoints/${encodeURIComponent(serviceName)}`, {
-      url: `http://${serviceName}:${servicePort}`
-    })
-  }
-
-  const createApiEndpoint = (name, host, paths) => axios.put(`/api-endpoints/${encodeURIComponent(name)}`, { host, paths })
-
+const addIngressRules = (uid, spec) => {
   if (spec.rules) {
     spec.rules.forEach((rule) => {
+      return
+      createServiceEndpoint(rule.http.backend)
+        .then(() => createApiEndpoint('', rule.host, rule.http.paths))
+        .catch(debug)
     })
   }
 
   if (spec.backend) {
-    debug(`Creating default serviceEndpoint and ApiEndpoint for`, spec.backend)
+    debug(`Creating default serviceEndpoint and ApiEndpoint for`, spec.backend.serviceName, spec.backend.servicePort)
     createServiceEndpoint('default', spec.backend)
       .then(() => createApiEndpoint('default', '*'))
+      .then(() => createPipelineWithProxyPolicy(uid, 'default', 'default', 'default'))
       .catch((err) => debug(err.message))
   }
 }
@@ -44,7 +43,7 @@ client.loadSpec().then((kubeApi) => {
 
     switch (ingressWatchEvent.type) {
       case 'ADDED':
-        addIngressRule(uid, spec)
+        addIngressRules(uid, spec)
         break;
       case 'MODIFIED':
         deleteIngressRule(uid)
