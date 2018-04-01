@@ -4,7 +4,7 @@ const debug = require('debug')('eg-ingress-controller')
 
 const { createServiceEndpoint, createApiEndpoint, createPipelineWithProxyPolicy } = require('./eg-client')
 
-const client = new Client({ config: config.getInCluster() })
+const client = new Client({ config: config.fromKubeconfig() })
 
 const addIngressRules = (uid, spec) => {
 
@@ -12,7 +12,7 @@ const addIngressRules = (uid, spec) => {
     Promise.all(spec.rules.map((rule) => {
       return rule.http.paths.forEach((path) =>
         createServiceEndpoint(path.backend.serviceName, path.backend.serviceName, path.backend.servicePort)
-          .then(() => Promise.all[`${rule.host}${path.path || ''}`, createApiEndpoint(`${rule.host}${path.path || ''}`, rule.host, path.path)])
+          .then(() => Promise.all([`${rule.host}${path.path || ''}`, createApiEndpoint(`${rule.host}${path.path || ''}`, rule.host, path.path)]))
           .then(([apiEndpoint]) =>
             createPipelineWithProxyPolicy(uid, `${apiEndpoint}_to_${path.backend.serviceName}`, path.backend.serviceName, apiEndpoint))
           .catch((err) => debug(err.message))
