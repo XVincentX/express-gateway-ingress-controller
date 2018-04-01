@@ -9,12 +9,14 @@ const client = new Client({ config: config.getInCluster() })
 const addIngressRules = (uid, spec) => {
 
   const rulePromise = spec.rules ?
-    Promise.all(spec.rules.map((rule) =>
-      createServiceEndpoint(uid, rule.http.backend.serviceName, rule.http.backend.servicePort)
-        .then(() => createApiEndpoint(uid, rule.host, rule.http.paths))
-        .then(() => createPipelineWithProxyPolicy(uid, uid, uid, uid))
-        .catch((err) => debug(err.message))
-    )) : Promise.resolve()
+    Promise.all(spec.rules.map((rule) => {
+      return rule.http.paths.forEach((path) =>
+        createServiceEndpoint(uid, path.serviceName, path.servicePort)
+          .then(() => createApiEndpoint(uid, rule.host, path.path))
+          .then(() => createPipelineWithProxyPolicy(uid, uid, uid, uid))
+          .catch((err) => debug(err.message))
+      )
+    })) : Promise.resolve()
 
   const defautBackendPromise = () => spec.backend ?
     createServiceEndpoint('default', spec.backend.serviceName, spec.backend.servicePort)
