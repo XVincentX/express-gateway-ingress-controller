@@ -5,9 +5,9 @@ const createServiceEndpoint = (name, serviceName, servicePort) => {
   debug(`Creating service endpoint ${name} on ${serviceName}:${servicePort}`)
   return axios.put(`/service-endpoints/${encodeURIComponent(name)}`, { url: `http://${serviceName}:${servicePort}` });
 }
-const createApiEndpoint = (name, host, paths) => {
-  debug(`Creating api endpoint ${name} for ${host} and ${paths}`)
-  return axios.put(`/api-endpoints/${encodeURIComponent(name)}`, { host, paths });
+const createApiEndpoint = (name, host, path) => {
+  debug(`Creating api endpoint ${name} for ${host} and ${path}`)
+  return axios.put(`/api-endpoints/${encodeURIComponent(name)}`, { host, path });
 }
 const createPipelineWithProxyPolicy = (uid, name, serviceEndpoint, apiEndpoint) => {
   debug(`Creating pipeline ${name} from ${apiEndpoint} proxied to ${apiEndpoint}`)
