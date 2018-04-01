@@ -1,4 +1,4 @@
-apiVersion: skaffold/v1alpha1
+apiVersion: skaffold/v1alpha2
 kind: Config
 build:
   artifacts:
@@ -8,7 +8,4 @@ build:
 deploy:
   kubectl:
     manifests:
-    - paths:
       - eg-*
-      parameters:
-        IMAGE_NAME: eg-ingress-controller
