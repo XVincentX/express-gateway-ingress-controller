@@ -18,5 +18,8 @@
     "axios": "^0.18.0",
     "debug": "^3.1.0",
     "kubernetes-client": "^5.1.0"
+  },
+  "devDependencies": {
+    "xo": "^0.20.3"
   }
 }
