@@ -1,7 +1,7 @@
 const axios = require('axios').default.create({ baseURL: 'http://localhost:9876' })
 
 const createServiceEndpoint = (name, serviceName, servicePort) =>
-  axios.put(`/service-endpoints/${encodeURIComponent(serviceName)}`, { url: `http://${serviceName}:${servicePort}` })
+  axios.put(`/service-endpoints/${encodeURIComponent(name)}`, { url: `http://${serviceName}:${servicePort}` })
 
 const createApiEndpoint = (name, host, paths) =>
   axios.put(`/api-endpoints/${encodeURIComponent(name)}`, { host, paths })
