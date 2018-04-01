@@ -2,7 +2,7 @@ const { config, Client } = require('kubernetes-client')
 const JSONStream = require('JSONStream')
 const debug = require('debug')('eg-ingress-controller')
 
-const { createServiceEndpoint, createApiEndpoint, createPipelineWithProxyPolicy } = require('./egClient')
+const { createServiceEndpoint, createApiEndpoint, createPipelineWithProxyPolicy } = require('./eg-client')
 
 const client = new Client({ config: config.getInCluster() })
 
