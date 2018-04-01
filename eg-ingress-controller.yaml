@@ -14,19 +14,21 @@ spec:
         - name: eg-ingress-controller
           image: eg-ingress-controller
           imagePullPolicy: Never
-          livenessProbe: &livenessProbe
+          readinessProbe: &probe
               httpGet:
                 host: localhost
                 path: /users
                 port: 9876
-              initialDelaySeconds: 3
+              initialDelaySeconds: 10
               periodSeconds: 3
+          livenessProbe: &probe
           env:
             - name: DEBUG
-              value: 'eg-ingress-controller'
+              value: 'eg-ingress-controller*'
         - name: express-gateway
           image: expressgateway/express-gateway
-          livenessProbe: *livenessProbe
+          readinessProbe: *probe
+          livenessProbe: *probe
           env:
             - name: LOG_LEVEL
-              value: warn
+              value: debug

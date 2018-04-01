@@ -11,9 +11,10 @@ const addIngressRules = (uid, spec) => {
   const rulePromise = spec.rules ?
     Promise.all(spec.rules.map((rule) => {
       return rule.http.paths.forEach((path) =>
-        createServiceEndpoint(uid, path.serviceName, path.servicePort)
-          .then(() => createApiEndpoint(uid, rule.host, path.path))
-          .then(() => createPipelineWithProxyPolicy(uid, uid, uid, uid))
+        createServiceEndpoint(path.backend.serviceName, path.backend.serviceName, path.backend.servicePort)
+          .then(() => Promise.all[`${rule.host}${path.path || ''}`, createApiEndpoint(`${rule.host}${path.path || ''}`, rule.host, path.path)])
+          .then(([apiEndpoint]) =>
+            createPipelineWithProxyPolicy(uid, `${apiEndpoint}_to_${path.backend.serviceName}`, path.backend.serviceName, apiEndpoint))
           .catch((err) => debug(err.message))
       )
     })) : Promise.resolve()
